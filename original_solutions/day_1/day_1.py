@@ -5,11 +5,11 @@ import re
 from collections import defaultdict
 
 assert len(argv) == 2, "args: [a, b, A, B]"
-assert argv[1] in ['a', 'b', 'A', 'B']
+assert argv[1] in ["a", "b", "A", "B"]
 
 CMD = argv[1]
 
-lines = get_data(day=1,year=2023).splitlines()
+lines = get_data(day=1, year=2023).splitlines()
 
 if CMD == "a" or CMD == "b":
     with open("test.txt", "r") as f:
@@ -22,39 +22,12 @@ if lines[-1] == "":
     lines = lines[:-1]
 
 def part_A():
-    S = 0
-    for l in lines:
-        f = re.findall(r"\d", l)
-        s = f[0] + f[-1]
-        S += int(s)
-    return S
+    return sum([int(f[0] + f[-1]) for f in [re.findall(r"\d", l) for l in lines]])
 
 def part_B():
-    m = {
-        "one": "1",
-        "two": "2",
-        "three": "3",
-        "four": "4",
-        "five": "5",
-        "six": "6",
-        "seven": "7",
-        "eight": "8",
-        "nine": "9",
-        "1": "1",
-        "2": "2",
-        "3": "3",
-        "4": "4",
-        "5": "5",
-        "6": "6",
-        "7": "7",
-        "8": "8",
-        "9": "9",
-    }
-    S = 0
-    for l in lines:
-        f = re.findall(r"(?=(\d|one|two|three|four|five|six|seven|eight|nine))", l)
-        S += int(m[f[0]] + m[f[-1]])
-    return S
+    m = ("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+    M = {**{k: i for i, k in enumerate(m, 1)}, **{str(i): i for i in range(1, 10)}}
+    return sum([int(M[f[0]] * 10 + M[f[-1]]) for f in [re.findall(f"(?=(\d|{'|'.join(m)}))", l) for l in lines]])
 
 
 # ---------------------------------------------------------------------------
